@@ -11,9 +11,7 @@
         <b-card no-body>
           <b-tabs card>
             <User />
-            <b-tab title="PeriodType">
-              <b-card-text>時代の種別</b-card-text>
-            </b-tab>
+            <PeriodType />
             <b-tab title="Period">
               <b-card-text>時代に関する情報</b-card-text>
             </b-tab>
