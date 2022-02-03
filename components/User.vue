@@ -8,7 +8,7 @@
           <b-col sm="3"> loginid: </b-col>
           <b-col sm="6"> {{ user.loginid }} </b-col>
           <b-col sm="3" class="text-right">
-            <b-btn size="sm" @click="getUserDetail(user.id)">詳細</b-btn>
+            <b-btn size="sm" @click="getUserDetail(user)">詳細</b-btn>
           </b-col>
         </b-row>
         <b-btn block size="sm" @click="getUserList">一覧取得</b-btn>
@@ -45,29 +45,11 @@
             ></b-form-input>
           </b-col>
         </b-row>
-        <b-row class="my-1">
+        <b-row v-for="key in updateKeys" :key="key.id" class="my-1">
           <b-col sm="3">
-            <label :for="`type-approved`">approved:</label>
+            <label :for="`type-${key}`">{{ key }}:</label>
           </b-col>
-          <b-col sm="9">{{ userDetail.approved }} </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label :for="`type-deleted`">deleted:</label>
-          </b-col>
-          <b-col sm="9">{{ userDetail.deleted }} </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label :for="`type-created_ts`">created_ts:</label>
-          </b-col>
-          <b-col sm="9">{{ userDetail.created_ts }} </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label :for="`type-modified_ts`">modified_ts:</label>
-          </b-col>
-          <b-col sm="9">{{ userDetail.modified_ts }} </b-col>
+          <b-col sm="9">{{ userDetail[key] }} </b-col>
         </b-row>
         <b-btn block size="sm" @click="userUpdate">更新実行</b-btn>
         <b-alert
@@ -146,6 +128,7 @@ export default {
       isError: false,
       showDetail: false,
       resInsert: {},
+      updateKeys: ['approved', 'deleted', 'created_ts', 'modified_ts'],
     }
   },
   computed: {
@@ -180,30 +163,26 @@ export default {
       this.inputLoginid('')
       this.inputPassword('')
     },
-    getUserDetail(userId) {
-      let detail = {}
-      for (const user of this.userList) {
-        if (user.id === userId) {
-          detail = user
-        }
-      }
-      this.inputLoginid(detail.loginid)
-      this.inputPassword(detail.password)
-      this.addUserDetail(detail)
+    getUserDetail(user) {
+      this.inputLoginid(user.loginid)
+      this.inputPassword(user.password)
+      this.addUserDetail(user)
       this.showDetail = true
+    },
+    async getUserList() {
+      const res = await this.$apiUserList()
+      this.pushUserList(res)
+      this.showDetail = false
+      this.inputLoginid('')
+      this.inputPassword('')
     },
     async userUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$axios.$post(
-        'https://mhj-api.becom.co.jp/mhj.cgi',
-        {
-          path: 'user',
-          method: 'update',
-          apikey: 'becom',
-          params: { id: this.userDetail.id, ...this.userInput },
-        }
-      )
+      const res = await this.$apiUserUpdate({
+        id: this.userDetail.id,
+        ...this.userInput,
+      })
       this.resInsert = res
       if ('error' in res) {
         this.isError = true
@@ -218,15 +197,7 @@ export default {
     async userInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$axios.$post(
-        'https://mhj-api.becom.co.jp/mhj.cgi',
-        {
-          path: 'user',
-          method: 'insert',
-          apikey: 'becom',
-          params: this.userInput,
-        }
-      )
+      const res = await this.$apiUserInsert(this.userInput)
       this.resInsert = res
       if ('error' in res) {
         this.isError = true
@@ -236,18 +207,6 @@ export default {
         this.inputPassword('')
       }
       this.getUserList()
-    },
-    async getUserList() {
-      const res = await this.$axios.$post(
-        'https://mhj-api.becom.co.jp/mhj.cgi',
-        {
-          path: 'user',
-          method: 'list',
-          apikey: 'becom',
-          params: {},
-        }
-      )
-      this.pushUserList(res)
     },
   },
 }
