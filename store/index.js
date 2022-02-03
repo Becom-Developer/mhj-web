@@ -5,7 +5,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  pushUserList(state, list) {
+  addUserList(state, list) {
     state.userList = list
   },
   addUserDetail(state, data) {
