@@ -1,12 +1,12 @@
 <template>
-  <b-tab title="User" active>
-    <b-card-text>登録ユーザー</b-card-text>
+  <b-tab title="PeriodType">
+    <b-card-text>時代の種別</b-card-text>
     <!-- 一覧取得 -->
     <b-container fluid class="p-0 pb-3">
       <b-card title="一覧取得" sub-title="Card subtitle">
-        <b-row v-for="row in userList" :key="row.id" class="my-1">
-          <b-col sm="3"> loginid: </b-col>
-          <b-col sm="6"> {{ row.loginid }} </b-col>
+        <b-row v-for="row in periodTypeList" :key="row.id" class="my-1">
+          <b-col sm="3"> title: </b-col>
+          <b-col sm="6"> {{ row.title }} </b-col>
           <b-col sm="3" class="text-right">
             <b-btn size="sm" @click="getDetail(row)">詳細</b-btn>
           </b-col>
@@ -19,28 +19,16 @@
       <b-card title="詳細・更新登録" sub-title="Card subtitle">
         <b-row class="my-1">
           <b-col sm="3"> <label :for="`type-id`">id:</label> </b-col>
-          <b-col sm="9">{{ userDetail.id }} </b-col>
+          <b-col sm="9">{{ periodTypeDetail.id }} </b-col>
         </b-row>
         <b-row class="my-1">
           <b-col sm="3">
-            <label :for="`type-loginid`">loginid:</label>
+            <label :for="`type-title`">title:</label>
           </b-col>
           <b-col sm="9">
             <b-form-input
-              :id="`type-loginid`"
-              v-model="loginid"
-              :type="`text`"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label :for="`type-password`">password:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input
-              :id="`type-password`"
-              v-model="password"
+              :id="`type-title`"
+              v-model="title"
               :type="`text`"
             ></b-form-input>
           </b-col>
@@ -49,7 +37,7 @@
           <b-col sm="3">
             <label :for="`type-${key}`">{{ key }}:</label>
           </b-col>
-          <b-col sm="9">{{ userDetail[key] }} </b-col>
+          <b-col sm="9">{{ periodTypeDetail[key] }} </b-col>
         </b-row>
         <b-btn block size="sm" @click="formUpdate">更新実行</b-btn>
         <b-alert
@@ -73,24 +61,12 @@
       <b-card title="新規登録" sub-title="Card subtitle">
         <b-row class="my-1">
           <b-col sm="3">
-            <label :for="`type-loginid`">loginid:</label>
+            <label :for="`type-title`">title:</label>
           </b-col>
           <b-col sm="9">
             <b-form-input
-              :id="`type-loginid`"
-              v-model="loginid"
-              :type="`text`"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label :for="`type-password`">password:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input
-              :id="`type-password`"
-              v-model="password"
+              :id="`type-title`"
+              v-model="title"
               :type="`text`"
             ></b-form-input>
           </b-col>
@@ -128,68 +104,51 @@ export default {
       isError: false,
       showDetail: false,
       res: {},
-      updateKeys: ['approved', 'deleted', 'created_ts', 'modified_ts'],
+      updateKeys: ['deleted', 'created_ts', 'modified_ts'],
     }
   },
   computed: {
-    ...mapState(['userInput', 'userList', 'userDetail']),
-    loginid: {
+    ...mapState(['periodTypeList', 'periodTypeDetail', 'periodTypeInput']),
+    title: {
       get() {
-        return this.userInput.loginid
+        return this.periodTypeInput.title
       },
       set(value) {
-        this.inputLoginid(value)
-      },
-    },
-    password: {
-      get() {
-        return this.userInput.password
-      },
-      set(value) {
-        this.inputPassword(value)
+        this.inputTitle(value)
       },
     },
   },
   mounted() {},
   methods: {
-    ...mapMutations([
-      'addUserList',
-      'inputLoginid',
-      'inputPassword',
-      'addUserDetail',
-    ]),
+    ...mapMutations(['addPeriodTypeList', 'addPeriodTypeDetail', 'inputTitle']),
     showDetailWindow() {
       this.showDetail = false
-      this.inputLoginid('')
-      this.inputPassword('')
+      this.inputTitle('')
     },
     getDetail(row) {
-      this.inputLoginid(row.loginid)
-      this.inputPassword(row.password)
-      this.addUserDetail(row)
+      this.inputTitle(row.title)
+      this.addPeriodTypeDetail(row)
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiUserList()
-      this.addUserList(res)
+      const res = await this.$apiPeriodTypeList()
+      this.addPeriodTypeList(res)
       this.showDetail = false
-      this.inputLoginid('')
-      this.inputPassword('')
+      this.inputTitle('')
     },
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiUserUpdate({
-        id: this.userDetail.id,
-        ...this.userInput,
+      const res = await this.$apiPeriodTypeUpdate({
+        id: this.periodTypeDetail.id,
+        ...this.periodTypeInput,
       })
       this.res = res
       if ('error' in res) {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputLoginid('')
-        this.inputPassword('')
+        this.inputTitle('')
         await this.getList()
         this.getDetail(res)
       }
@@ -197,14 +156,13 @@ export default {
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiUserInsert(this.userInput)
+      const res = await this.$apiPeriodTypeInsert(this.periodTypeInput)
       this.res = res
       if ('error' in res) {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputLoginid('')
-        this.inputPassword('')
+        this.inputTitle('')
       }
       this.getList()
     },
