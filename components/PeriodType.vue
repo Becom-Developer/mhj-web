@@ -4,15 +4,11 @@
     <!-- 一覧取得 -->
     <b-container fluid class="p-0 pb-3">
       <b-card title="一覧取得" sub-title="Card subtitle">
-        <b-row
-          v-for="periodType in periodTypeList.period_type"
-          :key="periodType.id"
-          class="my-1"
-        >
+        <b-row v-for="row in periodTypeList" :key="row.id" class="my-1">
           <b-col sm="3"> title: </b-col>
-          <b-col sm="6"> {{ periodType.title }} </b-col>
+          <b-col sm="6"> {{ row.title }} </b-col>
           <b-col sm="3" class="text-right">
-            <b-btn size="sm" @click="getDetail(periodType)">詳細</b-btn>
+            <b-btn size="sm" @click="getDetail(row)">詳細</b-btn>
           </b-col>
         </b-row>
         <b-btn block size="sm" @click="getList">一覧取得</b-btn>
@@ -124,14 +120,14 @@ export default {
   },
   mounted() {},
   methods: {
-    ...mapMutations(['addPeriodTypeList', 'addPeriodType', 'inputTitle']),
+    ...mapMutations(['addPeriodTypeList', 'addPeriodTypeDetail', 'inputTitle']),
     showDetailWindow() {
       this.showDetail = false
       this.inputTitle('')
     },
-    getDetail(user) {
-      this.inputTitle(user.title)
-      this.addPeriodType(user)
+    getDetail(row) {
+      this.inputTitle(row.title)
+      this.addPeriodTypeDetail(row)
       this.showDetail = true
     },
     async getList() {

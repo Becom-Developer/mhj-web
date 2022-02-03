@@ -4,11 +4,11 @@
     <!-- 一覧取得 -->
     <b-container fluid class="p-0 pb-3">
       <b-card title="一覧取得" sub-title="Card subtitle">
-        <b-row v-for="user in userList" :key="user.id" class="my-1">
+        <b-row v-for="row in userList" :key="row.id" class="my-1">
           <b-col sm="3"> loginid: </b-col>
-          <b-col sm="6"> {{ user.loginid }} </b-col>
+          <b-col sm="6"> {{ row.loginid }} </b-col>
           <b-col sm="3" class="text-right">
-            <b-btn size="sm" @click="getDetail(user)">詳細</b-btn>
+            <b-btn size="sm" @click="getDetail(row)">詳細</b-btn>
           </b-col>
         </b-row>
         <b-btn block size="sm" @click="getList">一覧取得</b-btn>
@@ -163,10 +163,10 @@ export default {
       this.inputLoginid('')
       this.inputPassword('')
     },
-    getDetail(user) {
-      this.inputLoginid(user.loginid)
-      this.inputPassword(user.password)
-      this.addUserDetail(user)
+    getDetail(row) {
+      this.inputLoginid(row.loginid)
+      this.inputPassword(row.password)
+      this.addUserDetail(row)
       this.showDetail = true
     },
     async getList() {

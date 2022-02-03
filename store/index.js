@@ -8,25 +8,25 @@ export const state = () => ({
 })
 
 export const mutations = {
-  addPeriodType(state, data) {
-    state.periodTypeDetail = data
+  addPeriodTypeList(state, list) {
+    state.periodTypeList = list
   },
   inputTitle(state, str) {
     state.periodTypeInput.title = str
   },
-  addPeriodTypeList(state, list) {
-    state.periodTypeList = list
+  addPeriodTypeDetail(state, data) {
+    state.periodTypeDetail = data
   },
   addUserList(state, list) {
     state.userList = list
-  },
-  addUserDetail(state, data) {
-    state.userDetail = data
   },
   inputLoginid(state, str) {
     state.userInput.loginid = str
   },
   inputPassword(state, str) {
     state.userInput.password = str
+  },
+  addUserDetail(state, data) {
+    state.userDetail = data
   },
 }
