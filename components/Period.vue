@@ -209,14 +209,13 @@ export default {
       showDetail: false,
       res: {},
       updateKeys: ['deleted', 'created_ts', 'modified_ts'],
-      options: [
-        { value: null, text: 'Please select an option' },
-        { value: 'a', text: 'This is First option' },
-      ],
     }
   },
   computed: {
-    ...mapState(['periodList', 'periodInput', 'periodDetail']),
+    ...mapState(['periodList', 'periodInput', 'periodDetail', 'periodTypeOpt']),
+    options() {
+      return this.periodTypeOpt
+    },
     period_type_id: {
       get() {
         return this.periodInput.period_type_id
@@ -254,7 +253,8 @@ export default {
     },
   },
   async mounted() {
-    this.options = await this.$selectPeriodType()
+    const opt = await this.$selectPeriodType()
+    this.addState({ stateKey: 'periodTypeOpt', data: opt })
   },
   methods: {
     ...mapMutations(['inputPeriod', 'clearInput', 'buildInput', 'addState']),
@@ -269,18 +269,22 @@ export default {
     },
     async getList() {
       const res = await this.$apiPeriodTypeList()
-      const list = []
-      for (const row of res) {
-        list.push({ period_type_id: row.id })
+      if ('error' in res) {
+        this.addState({ stateKey: 'periodList', data: [] })
+      } else {
+        const list = []
+        for (const row of res) {
+          list.push({ period_type_id: row.id })
+        }
+        const periodList = []
+        for (const row of list) {
+          const res = await this.$apiPeriodList(row)
+          periodList.push(res)
+        }
+        this.addState({ stateKey: 'periodList', data: periodList })
+        this.showDetail = false
+        this.clearInput('periodInput')
       }
-      const periodList = []
-      for (const row of list) {
-        const res = await this.$apiPeriodList(row)
-        periodList.push(res)
-      }
-      this.addState({ stateKey: 'periodList', data: periodList })
-      this.showDetail = false
-      this.clearInput('periodInput')
     },
     async formUpdate() {
       this.isCompleted = false

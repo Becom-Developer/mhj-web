@@ -164,9 +164,13 @@ export default {
     },
     async getList() {
       const res = await this.$apiUserList()
-      this.addState({ stateKey: 'userList', data: res })
-      this.showDetail = false
-      this.clearInput('userInput')
+      if ('error' in res) {
+        this.addState({ stateKey: 'userList', data: [] })
+      } else {
+        this.addState({ stateKey: 'userList', data: res })
+        this.showDetail = false
+        this.clearInput('userInput')
+      }
     },
     async formUpdate() {
       this.isCompleted = false

@@ -5,6 +5,7 @@ export const state = () => ({
   periodTypeList: [],
   periodTypeInput: { title: '' },
   periodTypeDetail: {},
+  periodTypeOpt: [{ value: null, text: 'Please select an option' }],
   periodList: [],
   periodInput: {
     period_type_id: '',

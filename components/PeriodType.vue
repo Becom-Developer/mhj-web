@@ -132,9 +132,13 @@ export default {
     },
     async getList() {
       const res = await this.$apiPeriodTypeList()
-      this.addState({ stateKey: 'periodTypeList', data: res })
-      this.showDetail = false
-      this.clearInput('periodTypeInput')
+      if ('error' in res) {
+        this.addState({ stateKey: 'periodTypeList', data: [] })
+      } else {
+        this.addState({ stateKey: 'periodTypeList', data: res })
+        this.showDetail = false
+        this.clearInput('periodTypeInput')
+      }
     },
     async formUpdate() {
       this.isCompleted = false
@@ -151,6 +155,8 @@ export default {
         this.clearInput('periodTypeInput')
         await this.getList()
         this.getDetail(res)
+        const opt = await this.$selectPeriodType()
+        this.addState({ stateKey: 'periodTypeOpt', data: opt })
       }
     },
     async formInsert() {
@@ -163,6 +169,8 @@ export default {
       } else {
         this.isCompleted = true
         this.clearInput('periodTypeInput')
+        const opt = await this.$selectPeriodType()
+        this.addState({ stateKey: 'periodTypeOpt', data: opt })
       }
       this.getList()
     },
