@@ -12,9 +12,7 @@
           <b-tabs card>
             <User />
             <PeriodType />
-            <b-tab title="Period">
-              <b-card-text>時代に関する情報</b-card-text>
-            </b-tab>
+            <Period />
             <b-tab title="Chronology">
               <b-card-text>年表</b-card-text>
             </b-tab>

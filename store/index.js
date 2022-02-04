@@ -5,28 +5,43 @@ export const state = () => ({
   periodTypeList: [],
   periodTypeInput: { title: '' },
   periodTypeDetail: {},
+  periodList: [],
+  periodInput: {
+    period_type_id: '',
+    title: '',
+    start_year: '',
+    end_year: '',
+    start_date: '',
+    end_date: '',
+  },
+  periodDetail: {},
 })
 
 export const mutations = {
-  addPeriodTypeList(state, list) {
-    state.periodTypeList = list
+  addState(state, { stateKey, data }) {
+    state[stateKey] = data
   },
-  inputTitle(state, str) {
-    state.periodTypeInput.title = str
+  buildInput(state, { inputKey, row }) {
+    for (const key in state[inputKey]) {
+      if (key in row) {
+        state[inputKey][key] = row[key]
+      }
+    }
   },
-  addPeriodTypeDetail(state, data) {
-    state.periodTypeDetail = data
+  clearInput(state, inputKey) {
+    for (const key in state[inputKey]) {
+      state[inputKey][key] = ''
+    }
   },
-  addUserList(state, list) {
-    state.userList = list
-  },
-  inputLoginid(state, str) {
-    state.userInput.loginid = str
-  },
-  inputPassword(state, str) {
-    state.userInput.password = str
-  },
-  addUserDetail(state, data) {
-    state.userDetail = data
+  inputPeriod(state, { key, val }) {
+    state.periodInput[key] = val
+    if (key === 'start_date') {
+      const year = val.slice(0, 4)
+      state.periodInput.start_year = year
+    }
+    if (key === 'end_date') {
+      const year = val.slice(0, 4)
+      state.periodInput.end_year = year
+    }
   },
 }

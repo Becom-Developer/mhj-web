@@ -137,44 +137,36 @@ export default {
       get() {
         return this.userInput.loginid
       },
-      set(value) {
-        this.inputLoginid(value)
+      set(val) {
+        this.buildInput({ inputKey: 'userInput', row: { loginid: val } })
       },
     },
     password: {
       get() {
         return this.userInput.password
       },
-      set(value) {
-        this.inputPassword(value)
+      set(val) {
+        this.buildInput({ inputKey: 'userInput', row: { password: val } })
       },
     },
   },
   mounted() {},
   methods: {
-    ...mapMutations([
-      'addUserList',
-      'inputLoginid',
-      'inputPassword',
-      'addUserDetail',
-    ]),
+    ...mapMutations(['buildInput', 'clearInput', 'addState']),
     showDetailWindow() {
       this.showDetail = false
-      this.inputLoginid('')
-      this.inputPassword('')
+      this.clearInput('userInput')
     },
     getDetail(row) {
-      this.inputLoginid(row.loginid)
-      this.inputPassword(row.password)
-      this.addUserDetail(row)
+      this.buildInput({ inputKey: 'userInput', row })
+      this.addState({ stateKey: 'userDetail', data: row })
       this.showDetail = true
     },
     async getList() {
       const res = await this.$apiUserList()
-      this.addUserList(res)
+      this.addState({ stateKey: 'userList', data: res })
       this.showDetail = false
-      this.inputLoginid('')
-      this.inputPassword('')
+      this.clearInput('userInput')
     },
     async formUpdate() {
       this.isCompleted = false
@@ -188,8 +180,7 @@ export default {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputLoginid('')
-        this.inputPassword('')
+        this.clearInput('userInput')
         await this.getList()
         this.getDetail(res)
       }
@@ -203,8 +194,7 @@ export default {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputLoginid('')
-        this.inputPassword('')
+        this.clearInput('userInput')
       }
       this.getList()
     },
