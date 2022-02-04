@@ -113,28 +113,28 @@ export default {
       get() {
         return this.periodTypeInput.title
       },
-      set(value) {
-        this.inputTitle(value)
+      set(val) {
+        this.buildInput({ inputKey: 'periodTypeInput', row: { title: val } })
       },
     },
   },
   mounted() {},
   methods: {
-    ...mapMutations(['addPeriodTypeList', 'addPeriodTypeDetail', 'inputTitle']),
+    ...mapMutations(['buildInput', 'clearInput', 'addState']),
     showDetailWindow() {
       this.showDetail = false
-      this.inputTitle('')
+      this.clearInput('periodTypeInput')
     },
     getDetail(row) {
-      this.inputTitle(row.title)
-      this.addPeriodTypeDetail(row)
+      this.buildInput({ inputKey: 'periodTypeInput', row })
+      this.addState({ stateKey: 'periodTypeDetail', data: row })
       this.showDetail = true
     },
     async getList() {
       const res = await this.$apiPeriodTypeList()
-      this.addPeriodTypeList(res)
+      this.addState({ stateKey: 'periodTypeList', data: res })
       this.showDetail = false
-      this.inputTitle('')
+      this.clearInput('periodTypeInput')
     },
     async formUpdate() {
       this.isCompleted = false
@@ -148,7 +148,7 @@ export default {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputTitle('')
+        this.clearInput('periodTypeInput')
         await this.getList()
         this.getDetail(res)
       }
@@ -162,7 +162,7 @@ export default {
         this.isError = true
       } else {
         this.isCompleted = true
-        this.inputTitle('')
+        this.clearInput('periodTypeInput')
       }
       this.getList()
     },
