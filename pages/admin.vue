@@ -13,9 +13,7 @@
             <User />
             <PeriodType />
             <Period />
-            <b-tab title="Chronology">
-              <b-card-text>年表</b-card-text>
-            </b-tab>
+            <Chronology />
             <b-tab title="HistoryDetails">
               <b-card-text>歴史の詳細</b-card-text>
             </b-tab>

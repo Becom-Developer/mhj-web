@@ -131,18 +131,20 @@ export default {
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiPeriodTypeList()
-      this.addState({ stateKey: 'periodTypeList', data: res })
-      this.showDetail = false
-      this.clearInput('periodTypeInput')
+      const res = await this.$webapi(['periodtype', 'list', {}])
+      if ('error' in res) {
+        this.addState({ stateKey: 'periodTypeList', data: [] })
+      } else {
+        this.addState({ stateKey: 'periodTypeList', data: res })
+        this.showDetail = false
+        this.clearInput('periodTypeInput')
+      }
     },
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodTypeUpdate({
-        id: this.periodTypeDetail.id,
-        ...this.periodTypeInput,
-      })
+      const qParams = { id: this.periodTypeDetail.id, ...this.periodTypeInput }
+      const res = await this.$webapi(['periodtype', 'update', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
@@ -151,18 +153,23 @@ export default {
         this.clearInput('periodTypeInput')
         await this.getList()
         this.getDetail(res)
+        const opt = await this.$selectPeriodType()
+        this.addState({ stateKey: 'periodTypeOpt', data: opt })
       }
     },
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodTypeInsert(this.periodTypeInput)
+      const qParams = this.periodTypeInput
+      const res = await this.$webapi(['periodtype', 'insert', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
       } else {
         this.isCompleted = true
         this.clearInput('periodTypeInput')
+        const opt = await this.$selectPeriodType()
+        this.addState({ stateKey: 'periodTypeOpt', data: opt })
       }
       this.getList()
     },

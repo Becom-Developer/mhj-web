@@ -5,6 +5,7 @@ export const state = () => ({
   periodTypeList: [],
   periodTypeInput: { title: '' },
   periodTypeDetail: {},
+  periodTypeOpt: [{ value: null, text: 'Please select an option' }],
   periodList: [],
   periodInput: {
     period_type_id: '',
@@ -15,6 +16,14 @@ export const state = () => ({
     end_date: '',
   },
   periodDetail: {},
+  chronologyList: [],
+  chronologyInput: {
+    title: '',
+    adyear: '',
+    jayear: '',
+  },
+  chronologyDetail: {},
+  chronologyOpt: [{ value: null, text: 'Please select an option' }],
 })
 
 export const mutations = {

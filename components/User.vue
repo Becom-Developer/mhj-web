@@ -163,18 +163,20 @@ export default {
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiUserList()
-      this.addState({ stateKey: 'userList', data: res })
-      this.showDetail = false
-      this.clearInput('userInput')
+      const res = await this.$webapi(['user', 'list', {}])
+      if ('error' in res) {
+        this.addState({ stateKey: 'userList', data: [] })
+      } else {
+        this.addState({ stateKey: 'userList', data: res })
+        this.showDetail = false
+        this.clearInput('userInput')
+      }
     },
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiUserUpdate({
-        id: this.userDetail.id,
-        ...this.userInput,
-      })
+      const qParams = { id: this.userDetail.id, ...this.userInput }
+      const res = await this.$webapi(['user', 'update', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
@@ -188,7 +190,7 @@ export default {
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiUserInsert(this.userInput)
+      const res = await this.$webapi(['user', 'insert', this.userInput])
       this.res = res
       if ('error' in res) {
         this.isError = true

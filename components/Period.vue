@@ -209,14 +209,13 @@ export default {
       showDetail: false,
       res: {},
       updateKeys: ['deleted', 'created_ts', 'modified_ts'],
-      options: [
-        { value: null, text: 'Please select an option' },
-        { value: 'a', text: 'This is First option' },
-      ],
     }
   },
   computed: {
-    ...mapState(['periodList', 'periodInput', 'periodDetail']),
+    ...mapState(['periodList', 'periodInput', 'periodDetail', 'periodTypeOpt']),
+    options() {
+      return this.periodTypeOpt
+    },
     period_type_id: {
       get() {
         return this.periodInput.period_type_id
@@ -254,7 +253,8 @@ export default {
     },
   },
   async mounted() {
-    this.options = await this.$selectPeriodType()
+    const opt = await this.$selectPeriodType()
+    this.addState({ stateKey: 'periodTypeOpt', data: opt })
   },
   methods: {
     ...mapMutations(['inputPeriod', 'clearInput', 'buildInput', 'addState']),
@@ -268,27 +268,29 @@ export default {
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiPeriodTypeList()
-      const list = []
-      for (const row of res) {
-        list.push({ period_type_id: row.id })
+      const res = await this.$webapi(['periodtype', 'list', {}])
+      if ('error' in res) {
+        this.addState({ stateKey: 'periodList', data: [] })
+      } else {
+        const list = []
+        for (const row of res) {
+          list.push({ period_type_id: row.id })
+        }
+        const periodList = []
+        for (const row of list) {
+          const res = await this.$webapi(['period', 'list', row])
+          periodList.push(res)
+        }
+        this.addState({ stateKey: 'periodList', data: periodList })
+        this.showDetail = false
+        this.clearInput('periodInput')
       }
-      const periodList = []
-      for (const row of list) {
-        const res = await this.$apiPeriodList(row)
-        periodList.push(res)
-      }
-      this.addState({ stateKey: 'periodList', data: periodList })
-      this.showDetail = false
-      this.clearInput('periodInput')
     },
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodUpdate({
-        id: this.periodDetail.id,
-        ...this.periodInput,
-      })
+      const qParams = { id: this.periodDetail.id, ...this.periodInput }
+      const res = await this.$webapi(['period', 'update', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
@@ -302,7 +304,7 @@ export default {
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodInsert(this.periodInput)
+      const res = await this.$webapi(['period', 'insert', this.periodInput])
       this.res = res
       if ('error' in res) {
         this.isError = true
