@@ -16,6 +16,14 @@ export const state = () => ({
     end_date: '',
   },
   periodDetail: {},
+  chronologyList: [],
+  chronologyInput: {
+    title: '',
+    adyear: '',
+    jayear: '',
+  },
+  chronologyDetail: {},
+  chronologyOpt: [{ value: null, text: 'Please select an option' }],
 })
 
 export const mutations = {
