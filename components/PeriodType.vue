@@ -131,7 +131,7 @@ export default {
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiPeriodTypeList()
+      const res = await this.$webapi(['periodtype', 'list', {}])
       if ('error' in res) {
         this.addState({ stateKey: 'periodTypeList', data: [] })
       } else {
@@ -143,10 +143,8 @@ export default {
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodTypeUpdate({
-        id: this.periodTypeDetail.id,
-        ...this.periodTypeInput,
-      })
+      const qParams = { id: this.periodTypeDetail.id, ...this.periodTypeInput }
+      const res = await this.$webapi(['periodtype', 'update', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
@@ -162,7 +160,8 @@ export default {
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodTypeInsert(this.periodTypeInput)
+      const qParams = this.periodTypeInput
+      const res = await this.$webapi(['periodtype', 'insert', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true

@@ -268,7 +268,7 @@ export default {
       this.showDetail = true
     },
     async getList() {
-      const res = await this.$apiPeriodTypeList()
+      const res = await this.$webapi(['periodtype', 'list', {}])
       if ('error' in res) {
         this.addState({ stateKey: 'periodList', data: [] })
       } else {
@@ -278,7 +278,7 @@ export default {
         }
         const periodList = []
         for (const row of list) {
-          const res = await this.$apiPeriodList(row)
+          const res = await this.$webapi(['period', 'list', row])
           periodList.push(res)
         }
         this.addState({ stateKey: 'periodList', data: periodList })
@@ -289,10 +289,8 @@ export default {
     async formUpdate() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodUpdate({
-        id: this.periodDetail.id,
-        ...this.periodInput,
-      })
+      const qParams = { id: this.periodDetail.id, ...this.periodInput }
+      const res = await this.$webapi(['period', 'update', qParams])
       this.res = res
       if ('error' in res) {
         this.isError = true
@@ -306,7 +304,7 @@ export default {
     async formInsert() {
       this.isCompleted = false
       this.isError = false
-      const res = await this.$apiPeriodInsert(this.periodInput)
+      const res = await this.$webapi(['period', 'insert', this.periodInput])
       this.res = res
       if ('error' in res) {
         this.isError = true

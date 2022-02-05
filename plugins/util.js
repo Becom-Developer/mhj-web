@@ -1,6 +1,6 @@
 export default function ({ app }, inject) {
   inject('selectPeriodType', async () => {
-    const list = await app.$apiPeriodTypeList()
+    const list = await app.$webapi(['periodtype', 'list', {}])
     const options = []
     if (!list) {
       return options
