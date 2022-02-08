@@ -34,4 +34,18 @@ export default function ({ app }, inject) {
     }
     return options
   })
+  inject('selectHD', async () => {
+    const list = await app.$webapi(['chronology', 'list', {}])
+    const options = []
+    if (!list) {
+      return options
+    }
+    if ('error' in list) {
+      return options
+    }
+    for (const row of list) {
+      options.push({ value: row.id, text: row.title })
+    }
+    return options
+  })
 }

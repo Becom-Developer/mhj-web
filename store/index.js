@@ -17,13 +17,13 @@ export const state = () => ({
   },
   periodDetail: {},
   chronologyList: [],
-  chronologyInput: {
-    title: '',
-    adyear: '',
-    jayear: '',
-  },
+  chronologyInput: { title: '', adyear: '', jayear: '' },
   chronologyDetail: {},
   chronologyOpt: [{ value: null, text: 'Please select an option' }],
+  HDList: [],
+  HDInput: { chronology_id: '', contents: '', adyear_ts: '' },
+  HDDetail: {},
+  HDOpt: [{ value: null, text: 'Please select an option' }],
 })
 
 export const mutations = {
