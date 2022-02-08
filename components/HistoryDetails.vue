@@ -105,6 +105,39 @@
           </b-col>
         </b-row>
 
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_date`">adyear_date:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input
+              :id="`type-adyear_date`"
+              v-model="adyear_date"
+              :type="`date`"
+            ></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_time`">adyear_time:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-timepicker
+              :id="`type-adyear_time`"
+              v-model="adyear_time"
+              show-seconds
+              locale="en"
+            ></b-form-timepicker>
+          </b-col>
+        </b-row>
+
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_ts`">adyear_ts:</label>
+          </b-col>
+          <b-col sm="9">{{ HDInput['adyear_ts'] }} </b-col>
+        </b-row>
         <b-btn block size="sm" @click="formInsert">新規登録実行</b-btn>
         <b-alert
           variant="success"
@@ -160,6 +193,61 @@ export default {
       },
       set(val) {
         this.buildInput({ inputKey: 'HDInput', row: { contents: val } })
+      },
+    },
+    adyear_date: {
+      get() {
+        const ts = this.HDInput.adyear_ts
+        if (ts) {
+          const dateTime = ts.split(' ')
+          return dateTime[0]
+        } else {
+          return ''
+        }
+      },
+      set(val) {
+        const ts = this.HDInput.adyear_ts
+        if (typeof val !== 'string') {
+          return
+        }
+        if (ts) {
+          const dateTime = ts.split(' ')
+          const ad = val.concat(' ', dateTime[1])
+          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+        } else {
+          const ad = val.concat(' ', '00:00:00')
+          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+        }
+      },
+    },
+    adyear_time: {
+      get() {
+        const ts = this.HDInput.adyear_ts
+        if (ts) {
+          const dateTime = ts.split(' ')
+          return dateTime[1]
+        } else {
+          return ''
+        }
+      },
+      set(val) {
+        const ts = this.HDInput.adyear_ts
+        if (typeof val !== 'string') {
+          return
+        }
+        if (ts) {
+          const dateTime = ts.split(' ')
+          const ad = dateTime[0].concat(' ', val)
+          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+        }
+      },
+    },
+    adyear_ts: {
+      get() {
+        return this.HDInput.adyear_ts
+      },
+      set(val) {
+        this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: val } })
       },
     },
   },
