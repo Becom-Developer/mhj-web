@@ -45,12 +45,47 @@
             <label :for="`type-contents`">contents:</label>
           </b-col>
           <b-col sm="9">
-            <b-form-input
-              :id="`type-contents`"
+            <b-form-textarea
+              id="type-contents"
               v-model="contents"
-              :type="`text`"
+              placeholder="Auto height textarea"
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_date`">adyear_date:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input
+              :id="`type-adyear_date`"
+              v-model="adyear_date"
+              :type="`date`"
             ></b-form-input>
           </b-col>
+        </b-row>
+
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_time`">adyear_time:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-timepicker
+              :id="`type-adyear_time`"
+              v-model="adyear_time"
+              show-seconds
+              locale="en"
+            ></b-form-timepicker>
+          </b-col>
+        </b-row>
+
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label :for="`type-adyear_ts`">adyear_ts:</label>
+          </b-col>
+          <b-col sm="9">{{ HDInput['adyear_ts'] }} </b-col>
         </b-row>
 
         <b-row v-for="key in updateKeys" :key="key.id" class="my-1">
@@ -97,11 +132,13 @@
             <label :for="`type-contents`">contents:</label>
           </b-col>
           <b-col sm="9">
-            <b-form-input
-              :id="`type-contents`"
+            <b-form-textarea
+              id="type-contents"
               v-model="contents"
-              :type="`text`"
-            ></b-form-input>
+              placeholder="Auto height textarea"
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
           </b-col>
         </b-row>
 
@@ -162,7 +199,6 @@
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
-
 export default {
   props: {},
   data() {
@@ -198,48 +234,47 @@ export default {
     adyear_date: {
       get() {
         const ts = this.HDInput.adyear_ts
-        if (ts) {
-          const dateTime = ts.split(' ')
-          return dateTime[0]
-        } else {
+        if (!ts) {
           return ''
         }
+        const dateTime = ts.split(' ')
+        return dateTime[0]
       },
       set(val) {
-        const ts = this.HDInput.adyear_ts
         if (typeof val !== 'string') {
           return
         }
+        const ts = this.HDInput.adyear_ts
+        let ad = ''
         if (ts) {
           const dateTime = ts.split(' ')
-          const ad = val.concat(' ', dateTime[1])
-          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+          ad = val.concat(' ', dateTime[1])
         } else {
-          const ad = val.concat(' ', '00:00:00')
-          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+          ad = val.concat(' ', '00:00:00')
         }
+        this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
       },
     },
     adyear_time: {
       get() {
         const ts = this.HDInput.adyear_ts
-        if (ts) {
-          const dateTime = ts.split(' ')
-          return dateTime[1]
-        } else {
+        if (!ts) {
           return ''
         }
+        const dateTime = ts.split(' ')
+        return dateTime[1]
       },
       set(val) {
-        const ts = this.HDInput.adyear_ts
         if (typeof val !== 'string') {
           return
         }
-        if (ts) {
-          const dateTime = ts.split(' ')
-          const ad = dateTime[0].concat(' ', val)
-          this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
+        const ts = this.HDInput.adyear_ts
+        if (!ts) {
+          return ''
         }
+        const dateTime = ts.split(' ')
+        const ad = dateTime[0].concat(' ', val)
+        this.buildInput({ inputKey: 'HDInput', row: { adyear_ts: ad } })
       },
     },
     adyear_ts: {
