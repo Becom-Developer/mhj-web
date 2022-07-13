@@ -4,6 +4,56 @@
 
 ## Setup
 
+事前に`nvm`を使えるようにしておき指定バージョンのnode.jsを使えるように
+
+git clone にてソースコードを配置後プロジェクト配下にて指定のモジュールをインストール
+
+```zsh
+npm install
+```
+
+## Work
+
+ローカル開発時の起動方法など
+
+web, api ともにローカル起動
+
+```zsh
+npm run dev-local
+```
+
+リクエスト
+
+```zsh
+open 'http://localhost:4020/'
+```
+
+公開環境へデプロイ
+
+```zsh
+npm run generate-prod
+scp -r ~/github/mhj-web/dist/ becom2022@becom2022.sakura.ne.jp:~/www/mhj-web/
+```
+
+公開環境(stg)
+
+```zsh
+npm run generate-stg
+scp -r ~/github/mhj-web/dist/ becom2022@becom2022.sakura.ne.jp:~/www/mhj-web/
+```
+
+### HTTP
+
+```text
+https://https://mhj-web.becom.co.jp/
+```
+
+## Memo
+
+### Environment
+
+初動時の環境構築に関するメモ
+
 ```text
 ローカル環境 node.js / nvm が使える前提
 echo '16.13.2' >> .nvmrc
@@ -13,19 +63,26 @@ rm -r mhj-web
 npm run dev
 ```
 
-公開環境へ公開
+公開環境
 
-ローカル環境で dist 内に static なファイルを生成
-
-```zsh
-git fetch && git checkout main && git pull
-npm run generate
+```sh
+npm run generate-prod
+# 初回のみ公開環境でディレクトを作成しておく
+ssh becom2022@becom2022.sakura.ne.jp
+mkdir ~/www/mhj-web
+# 公開環境へ `scp` コマンドで送信
+scp -r ~/github/mhj-web/dist/ becom2022@becom2022.sakura.ne.jp:~/www/mhj-web/
 ```
 
-公開環境へ `scp` コマンドで送信
+公開環境(stg)
 
-```zsh
-scp -r ~/github/mhj-web/dist becom@becom.sakura.ne.jp:~/www/mhj-web
+```sh
+npm run generate-stg
+# 初回のみ公開環境でディレクトを作成しておく
+ssh becom2022@becom2022.sakura.ne.jp
+mkdir ~/www/mhj-stg-web
+# 公開環境へ `scp` コマンドで送信
+scp -r ~/github/mhj-web/dist/ becom2022@becom2022.sakura.ne.jp:~/www/mhj-stg-web/
 ```
 
 ## Build Setup
