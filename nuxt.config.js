@@ -48,4 +48,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  env: {
+    mode: process.env.MODE || 'local',
+    authApiURL: process.env.AUTH_API_URL || 'http://localhost:3000/',
+    zsearchApiURL: process.env.ZSEARCH_API_URL || 'http://localhost:3010/',
+    zsearchWebURL: process.env.ZSEARCH_WEB_URL || 'http://localhost:4010/',
+    mhjApiUrl: process.env.MHJ_API_URL || 'http://localhost:3020/',
+    mhjWebUrl: process.env.MHJ_WEB_URL || 'http://localhost:4020/',
+  },
 }
