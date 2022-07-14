@@ -1,7 +1,25 @@
 export default function ({ app }, inject) {
-  const url = 'https://mhj-api.becom.co.jp/mhj.cgi'
+  const authApiURL = process.env.authApiURL
+  const zsearchApiURL = process.env.zsearchApiURL
+  const mhjApiUrl = process.env.mhjApiUrl
+  inject('authApi', (qParams) => {
+    return app.$axios.$post(authApiURL, {
+      resource: qParams[0],
+      method: qParams[1],
+      params: qParams[2],
+      apikey: 'becom',
+    })
+  })
+  inject('zsearchApi', (qParams) => {
+    return app.$axios.$post(zsearchApiURL, {
+      resource: qParams[0],
+      method: qParams[1],
+      params: qParams[2],
+      apikey: 'becom',
+    })
+  })
   inject('webapi', (qParams) => {
-    return app.$axios.$post(url, {
+    return app.$axios.$post(mhjApiUrl, {
       path: qParams[0],
       method: qParams[1],
       params: qParams[2],
