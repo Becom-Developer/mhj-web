@@ -45,7 +45,7 @@ scp -r ~/github/mhj-web/dist/ becom2022@becom2022.sakura.ne.jp:~/www/mhj-web/
 ### HTTP
 
 ```text
-https://https://mhj-web.becom.co.jp/
+https://mhj-web.becom.co.jp/
 ```
 
 ## Memo
